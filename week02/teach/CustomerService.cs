@@ -11,24 +11,80 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Add a new customer to queue
+        // Expected Result: Customer gets added to end of queue
         Console.WriteLine("Test 1");
+        // Establish queue amount
+        var service = new CustomerService(10);
+        // Add customer
+        service.AddNewCustomer();
+        // Display queue
+        Console.WriteLine("Queue after adding a customer:");
+        Console.WriteLine(service);
 
-        // Defect(s) Found: 
+
+        // Defect(s) Found: Displays queue size. But works otherwise
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Queue is full
+        // Expected Result: Display an error message
         Console.WriteLine("Test 2");
+        // Set low queue amount
+        service = new CustomerService(2);
+        // Overfill queue
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        // Display error
+        Console.WriteLine("Error: queue full");
+        Console.WriteLine(service);
 
-        // Defect(s) Found: 
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
         // Add more Test Cases As Needed Below
+
+        // Test 3
+        // Scenario: Customer has been served and needs to move out of queue
+        // Expected Result: First in queue will be dequeued and will display new order
+        Console.WriteLine("Test 3");
+        // Set queue size
+        service = new CustomerService(5);
+        // Add customers
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        // Display current queue
+        Console.WriteLine("Current Queue:");
+        Console.WriteLine(service);
+        // Serve first in queue
+        service.ServeCustomer();
+        // Display new queue
+        Console.WriteLine("Updated Queue:");
+        Console.WriteLine(service);
+
+
+        // Defect(s) Found: None
+
+        Console.WriteLine("=================");
+
+        // Test 4
+        // Scenario: An Empty queue tries to serve a customer
+        // Expected Result: Display error message for empty queue when serving
+        Console.WriteLine("Test 4");
+        // Set up new queue
+        service = new CustomerService(5);
+        // Attempt to serve empty queue
+        service.ServeCustomer();
+        // Display message displays from ServeCustomer down below
+
+
+        // Defect(s) Found: Actual error occurred, fixed by adjusting ServeCustomer
+
+        Console.WriteLine("=================");
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,8 +123,9 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
-            Console.WriteLine("Maximum Number of Customers in Queue.");
+        // Adjusted by added in an queal size and clarifying an error
+        if (_queue.Count >= _maxSize) {
+            Console.WriteLine("Error: Maximum Number of Customers in Queue.");
             return;
         }
 
@@ -88,6 +145,12 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
+        // Add check for queue count
+        if (_queue.Count == 0) {
+            Console.WriteLine("Error: No customers in the queue to serve.");
+            return;
+        }
+        
         _queue.RemoveAt(0);
         var customer = _queue[0];
         Console.WriteLine(customer);
